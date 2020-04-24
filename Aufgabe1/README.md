@@ -13,6 +13,6 @@ Lesen Sie open(2), read(2), write(2) und close(2). Verwenden Sie diese Funktione
 
 Standard output is a stream to which a program writes its output data. The program requests data transfer with the write operation. Not all programs generate output. For example, the file rename command (variously called mv, move, or ren) is silent on success.
 
-**Unless redirected, standard output is inherited from the parent process. In the case of an interactive shell, that is usually the text terminal which initiated the program.** (desshalb wird der text einfach ins terminal gerintet von dem wir aufgerufen haben)
+**Unless redirected, standard output is inherited from the parent process. In the case of an interactive shell, that is usually the text terminal which initiated the program.** (desshalb wird der text einfach ins terminal geprintet von dem wir aufgerufen haben)
 
 The file descriptor for standard output is 1 (one); the POSIX <unistd.h> definition is STDOUT_FILENO; the corresponding C <stdio.h> variable is FILE* stdout; similarly, the C++ <iostream> variable is std::cout. 
