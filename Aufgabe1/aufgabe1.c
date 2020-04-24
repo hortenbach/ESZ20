@@ -12,7 +12,7 @@ int main(){
 
     while (read(irq_fd, &buffer[n++], 1) > 0){
     }
-    write(STDOUT_FILENO, &buffer[0], sizeof(buffer)/sizeof(char));
+    write(STDOUT_FILENO, &buffer[0], n*sizeof(char));
     close(irq_fd);
 
     return 0;
