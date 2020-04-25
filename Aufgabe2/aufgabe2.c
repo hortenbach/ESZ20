@@ -30,10 +30,11 @@
 int main(){
 
     char buffer;
-    void *ptr_serial;
+    struct winsize ptr_serial;
     int fd = open("/dev/tty0", O_RDONLY);
-    ioctl(fd, TIOCGWINSZ , ptr_serial);
-    printf("%d \n", (ptr_serial)->ws_row)
+    ioctl(fd, TIOCGWINSZ , &ptr_serial);
+    printf("rows: %d \n", ptr_serial.ws_row);
+    printf("columns: %d \n", ptr_serial.ws_col);
     close(fd);
 
     return 0;
