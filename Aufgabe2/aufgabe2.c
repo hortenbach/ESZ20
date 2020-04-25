@@ -4,7 +4,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
-
+#include <time.h>
 
 /* int ioctl(int fd, unsigned long request, ...); */
 /*
@@ -35,6 +35,10 @@ int main(){
     ioctl(fd, TIOCGWINSZ , &ptr_serial);
     printf("rows: %d \n", ptr_serial.ws_row);
     printf("columns: %d \n", ptr_serial.ws_col);
+    const struct timespec req =  { .tv_sec = 5, .tv_nsec = 0 } ;
+    struct timespec rem;
+    nanosleep(&req,&rem);
+    printf("5 seconds passed.\n");
     close(fd);
 
     return 0;
