@@ -8,7 +8,7 @@ bis 08.05.
 ### Aufgabe 1 
 läuft
 ### Aufgabe 2 
-läuft, muss noch auf sprintf() portiert werden
+läuft
 #### Terminal größe
 Gefragte Infos stecken in struct TIOCGWINSZ bei ioctl. 
 Man erhält jeweils ein int für zeilen und spalten.
