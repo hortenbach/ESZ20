@@ -29,8 +29,11 @@
 
 int main(){
 
+    // Fenstergroesse ermitteln
     struct winsize serial;
     ioctl(STDIN_FILENO, TIOCGWINSZ , &serial);
+    
+    // Fenstergroesse printen
     char line[serial.ws_col];
     for(int i=0;i<=serial.ws_col;i++){
       line[i]=' ';
@@ -39,12 +42,14 @@ int main(){
     write(STDOUT_FILENO, &line[0], sizeof(line)+1);
     sprintf(line,"cols: %hi",serial.ws_col);
     write(STDOUT_FILENO, &line[0], sizeof(line)+1);
-    //printf("rows: %hi \n", serial.ws_row);
-    //printf("columns: %hi \n", serial.ws_col);
+
+
+    // Delay um 5 Sekunden
     const struct timespec req =  { .tv_sec = 5, .tv_nsec = 0 } ;
     struct timespec rem;
     nanosleep(&req,&rem);
-    //printf("5 seconds passed.\n");
+
+    // Speichern eines Rahmen für die ermittelte Fenstergroesse mittels ASCII-Art am Rand des Bildschirms
     char buffer[serial.ws_row*serial.ws_col];
     for(int i=0;i<serial.ws_row*serial.ws_col;i++){
       if(i==serial.ws_col || i==serial.ws_col*2-1 || i==serial.ws_col*serial.ws_row-1 || i==serial.ws_col*(serial.ws_row-1)){
@@ -65,6 +70,8 @@ int main(){
         }
       }
     }
+
+    // Printe den berechneten Rahmen
     write(STDOUT_FILENO, &buffer[0], sizeof(buffer)/sizeof(char));
 
     return 0;
