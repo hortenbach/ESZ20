@@ -45,7 +45,7 @@ int main(){
         if(i<serial.ws_col*2-1){
           buffer[i]='-';
         }else{
-          if(i%serial.ws_col==0){
+          if(i%serial.ws_col==0 || i%serial.ws_col==serial.ws_col-1){
             buffer[i]='|';
           }else{
             buffer[i]=' ';
