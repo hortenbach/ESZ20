@@ -29,9 +29,7 @@
 
 int main(){
 
-    char buffer;
     struct winsize serial;
-    int fd = open("/dev/tty0", O_RDONLY);
     ioctl(STDIN_FILENO, TIOCGWINSZ , &serial);
     printf("rows: %hi \n", serial.ws_row);
     printf("columns: %d \n", serial.ws_col);
@@ -39,7 +37,20 @@ int main(){
     struct timespec rem;
     nanosleep(&req,&rem);
     printf("5 seconds passed.\n");
-    close(fd);
+    for(int i=1;i<serial.ws_row;i++){
+      for(int j=0;j<serial.ws_col;j++){
+        if( (i==1&&j==0)
+        || (i==1&&j==serial.ws_col-1)
+        || (i==serial.ws_row-1 && j==0)
+        || (i==serial.ws_row-1 && j==serial.ws_col-1)
+        ) {
+          printf("+");
+        }
+        else{
+          printf(" ");
+        }
+      }
+    }
 
     return 0;
 }
