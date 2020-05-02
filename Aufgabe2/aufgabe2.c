@@ -31,21 +31,29 @@ int main(){
 
     struct winsize serial;
     ioctl(STDIN_FILENO, TIOCGWINSZ , &serial);
-    printf("rows: %hi \n", serial.ws_row);
-    printf("columns: %d \n", serial.ws_col);
+    char line[serial.ws_col];
+    for(int i=0;i<=serial.ws_col;i++){
+      line[i]=' ';
+    }
+    sprintf(line,"rows: %hi",serial.ws_row);
+    write(STDOUT_FILENO, &line[0], sizeof(line)+1);
+    sprintf(line,"cols: %hi",serial.ws_col);
+    write(STDOUT_FILENO, &line[0], sizeof(line)+1);
+    //printf("rows: %hi \n", serial.ws_row);
+    //printf("columns: %hi \n", serial.ws_col);
     const struct timespec req =  { .tv_sec = 5, .tv_nsec = 0 } ;
     struct timespec rem;
     nanosleep(&req,&rem);
-    printf("5 seconds passed.\n");
+    //printf("5 seconds passed.\n");
     char buffer[serial.ws_row*serial.ws_col];
     for(int i=0;i<serial.ws_row*serial.ws_col;i++){
       if(i==serial.ws_col || i==serial.ws_col*2-1 || i==serial.ws_col*serial.ws_row-1 || i==serial.ws_col*(serial.ws_row-1)){
         buffer[i]='+';
       }else{
-        if(i<serial.ws_col*2-1){
+        if(i<serial.ws_col*2-1 && i>serial.ws_col){
           buffer[i]='-';
         }else{
-          if(i%serial.ws_col==0 || i%serial.ws_col==serial.ws_col-1){
+          if((i%serial.ws_col==0 || i%serial.ws_col==serial.ws_col-1) && i>serial.ws_col) {
             buffer[i]='|';
           }else{
             if(i>(serial.ws_row-1)*serial.ws_col){
