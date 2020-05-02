@@ -1,6 +1,6 @@
 #include <sys/time.h>
 #include <stdio.h>
-
+#include <unistd.h>
 
 double n_4(int);
 
@@ -22,11 +22,14 @@ and gives the number of seconds and microseconds since the Epoch (see time(2)). 
         int tz_dsttime;         / type of DST correction /
     };
 */
-  const int FAK = 24; // Faktor, der n erhöht für die n^4 Berechnung
+  const int FAK = 10; // Faktor, der n erhöht für die n^4 Berechnung (24 bei Urs)
   double res = 0.0;
   struct timeval start,end;
   unsigned long seconds, microseconds;
+  char line0[80]={' '},line1[41];
 
+  sprintf(line0," n%18sn_4%8sdelta_t\n\r","","");
+  write(STDOUT_FILENO, &line0[0], sizeof(line0));
 
   for(int i=0;i<10;i++){
 
@@ -37,7 +40,11 @@ and gives the number of seconds and microseconds since the Epoch (see time(2)). 
     seconds = end.tv_sec - start.tv_sec;
     microseconds = seconds * 1000000 + end.tv_usec - start.tv_usec;
 
-    printf("%f\t%lu.%lu s\n\r",res,seconds,microseconds);
+    //printf("n = %d, n_4 = %f, delta_t = %lu.%lu s\n\r",FAK*i,res,seconds,microseconds);
+
+    sprintf(line1,"%2d %20f %2lu.%-10lus\n\r",FAK*i,res,seconds,microseconds);
+    write(STDOUT_FILENO, &line1[0], sizeof(line1));
+
   }
 }
 
