@@ -37,30 +37,19 @@ int main(){
     struct timespec rem;
     //nanosleep(&req,&rem);
     printf("5 seconds passed.\n");
-    for(int i=1;i<serial.ws_row;i++){
-      for(int j=0;j<serial.ws_col;j++){
-        if( (i==1&&j==0)
-        || (i==1&&j==serial.ws_col-1)
-        || (i==serial.ws_row-1 && j==0)
-        || (i==serial.ws_row-1 && j==serial.ws_col-1)
-        ) {
-          printf("+");
-        }
-        else{
-          if(i==1||i==serial.ws_row-1){
-            printf("-");
-          }
-          else{
-            if(j==0 || j==serial.ws_col-1){
-              printf("|");
-            }
-            else{
-              printf(" ");
-            }
-          }
+    char buffer[serial.ws_row*serial.ws_col];
+    for(int i=0;i<serial.ws_row*serial.ws_col;i++){
+      if(i==serial.ws_col || i==serial.ws_col*2-1 || i==serial.ws_col*serial.ws_row-1 || i==serial.ws_col*(serial.ws_row-1)){
+        buffer[i]='+';
+      }else{
+        if(i<serial.ws_col*2-1){
+          buffer[i]='-';
+        }else{
+          buffer[i]=' ';
         }
       }
     }
+    write(STDOUT_FILENO, &buffer[0], sizeof(buffer)/sizeof(char));
 
     return 0;
 }
