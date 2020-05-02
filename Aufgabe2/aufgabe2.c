@@ -30,11 +30,11 @@
 int main(){
 
     char buffer;
-    struct winsize ptr_serial;
+    struct winsize serial;
     int fd = open("/dev/tty0", O_RDONLY);
-    ioctl(fd, TIOCGWINSZ , &ptr_serial);
-    printf("rows: %d \n", ptr_serial.ws_row);
-    printf("columns: %d \n", ptr_serial.ws_col);
+    ioctl(STDIN_FILENO, TIOCGWINSZ , &serial);
+    printf("rows: %hi \n", serial.ws_row);
+    printf("columns: %d \n", serial.ws_col);
     const struct timespec req =  { .tv_sec = 5, .tv_nsec = 0 } ;
     struct timespec rem;
     nanosleep(&req,&rem);
