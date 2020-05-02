@@ -51,7 +51,12 @@ int main(){
             printf("-");
           }
           else{
-            printf(" ");
+            if(j==0 || j==serial.ws_col-1){
+              printf("|");
+            }
+            else{
+              printf(" ");
+            }
           }
         }
       }
