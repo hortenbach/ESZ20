@@ -35,7 +35,7 @@ int main(){
     printf("columns: %d \n", serial.ws_col);
     const struct timespec req =  { .tv_sec = 5, .tv_nsec = 0 } ;
     struct timespec rem;
-    nanosleep(&req,&rem);
+    //nanosleep(&req,&rem);
     printf("5 seconds passed.\n");
     for(int i=1;i<serial.ws_row;i++){
       for(int j=0;j<serial.ws_col;j++){
@@ -47,7 +47,12 @@ int main(){
           printf("+");
         }
         else{
-          printf(" ");
+          if(i==1||i==serial.ws_row-1){
+            printf("-");
+          }
+          else{
+            printf(" ");
+          }
         }
       }
     }
