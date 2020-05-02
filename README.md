@@ -6,9 +6,9 @@ weitere Anmerkungen zu den jeweiligen Aufgaben sind in seperaten readmes in den 
 bis 08.05.
 
 ### Aufgabe 1 
-hat noch komische Zeichen
+läuft
 ### Aufgabe 2 
-läuft noch nichts
+läuft, muss noch auf sprintf() portiert werden
 #### Terminal größe
 Gefragte Infos stecken in struct TIOCGWINSZ bei ioctl. 
 Man erhält jeweils ein int für zeilen und spalten.
