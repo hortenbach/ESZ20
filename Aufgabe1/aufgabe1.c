@@ -2,16 +2,16 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <stdio.h>
 
 int main(){
 
-    int n = 0;
-    char buffer[3000];
+    char buffer;
     int irq_fd = open("/proc/interrupts", O_RDONLY);
 
-    while (read(irq_fd, &buffer[n++], 1) > 0){
+    while(read(irq_fd, &buffer, 1) > 0){   // read returns 0 if we reach EOF
+        write(STDOUT_FILENO, &buffer, 1);
     }
-    write(STDOUT_FILENO, &buffer[0], n*sizeof(char));
     close(irq_fd);
 
     return 0;
