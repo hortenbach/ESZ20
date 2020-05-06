@@ -1,3 +1,4 @@
+ 
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -5,27 +6,6 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 #include <time.h>
-
-/* int ioctl(int fd, unsigned long request, ...); */
-/*
-
-       TIOCGWINSZ     struct winsize *argp
-              Get window size.
-
-       TIOCSWINSZ     const struct winsize *argp
-              Set window size.
-
-       The struct used by these ioctls is defined as
-
-           struct winsize {
-               unsigned short ws_row;
-               unsigned short ws_col;
-               unsigned short ws_xpixel;   /* unused *//*
-               unsigned short ws_ypixel;   /* unused *//*
-           };
-
-*/
-
 
 int main(){
 
@@ -73,6 +53,8 @@ int main(){
 
     // Printe den berechneten Rahmen
     write(STDOUT_FILENO, &buffer[0], sizeof(buffer)/sizeof(char));
+
+    nanosleep(&req,&rem);
 
     return 0;
 }
