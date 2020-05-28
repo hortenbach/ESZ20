@@ -43,7 +43,8 @@ int main(int argc, char *argv[])
     ret = pthread_attr_getschedparam (&tattr, &param);
 
     if(argc == 2){
-        prio = atoi(argv[2]);
+//        prio = atoi(argv[2]);
+        prio = -10;
         if((prio > (-19)) && (prio < 19)){
             /* set the priority; others are unchanged */
             param.sched_priority = prio;
@@ -53,7 +54,6 @@ int main(int argc, char *argv[])
     /* setting the new scheduling param */
     ret = pthread_attr_setschedparam (&tattr, &param);
 
-    //pid_t tid = syscall(SYS_gettid);
     //pthread_create(&tid, &tattr, &a3, NULL);
     pthread_create(&tid, NULL, a3, NULL);
     /*****/
