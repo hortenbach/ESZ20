@@ -24,21 +24,21 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    int prio;
-    int ret, rc;
-    pthread_t tid;
-    pid_t pid = getpid();
-    struct sched_param param;
-    pthread_attr_t tattr;
-
-    /* initialized with default attributes */
-    pthread_attr_init (&tattr);
-    
-    /* choose real time policy FIFO */
-    pthread_attr_setschedpolicy(&tattr, SCHED_FIFO);
-
     /* if we got a thread priority */
     if(argc == 2){
+        int prio;
+        int ret, rc;
+        pthread_t tid;
+        pid_t pid = getpid();
+        struct sched_param param;
+        pthread_attr_t tattr;
+
+        /* initialized with default attributes */
+        pthread_attr_init (&tattr);
+        
+        /* choose real time policy FIFO */
+        pthread_attr_setschedpolicy(&tattr, SCHED_FIFO);
+
         /* get prio from command line and convert to int */
         prio = atoi(argv[1]);
         printf("debug prio: %d\n", prio);
@@ -54,17 +54,20 @@ int main(int argc, char *argv[])
             exit(EXIT_FAILURE);
         }
         printf("Priority: %d\n", param.sched_priority);
+        
+        rc = pthread_create(&tid, NULL, a3, NULL);
+        if(rc)			/* could not create thread */
+        {
+            printf("\n ERROR: return code from pthread_create is %d \n", rc);
+            exit(1);
+        }
+        /* wait for thread tid     */
+        pthread_join(tid, NULL);
+    } else {
+        void *tmp;
+        a3(tmp);
     }
-    
-    rc = pthread_create(&tid, NULL, a3, NULL);
-    if(rc)			/* could not create thread */
-    {
-        printf("\n ERROR: return code from pthread_create is %d \n", rc);
-        exit(1);
-    }
-    /* wait for thread tid     */
-    pthread_join(tid, NULL);
-    
+        
     return 0;
 }
 
