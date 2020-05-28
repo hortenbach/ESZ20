@@ -11,69 +11,67 @@
 #include <pthread.h>
 #include <time.h>
 
+/* functions */
 double n_4(int);
-void * a3(void *vargp);
+void * a3(void *data);
 
 int main(int argc, char *argv[])
 {    
+    /* check user input */
     if (argc > 2){
-        fprintf(stderr, "Too many Arguments!\nUsage: aufgabe4 [RT priority (-19 to 19)]\nUser might add no or one optional argument.\n");
+        fprintf(stderr, "Too many Arguments!\nUsage: aufgabe4"
+                "[RT priority (-19 to 19)]\nUser might add no or one optional argument.\n");
         exit(EXIT_FAILURE);
     }
 
-    pthread_attr_t *tattr;
-    if((tattr = (pthread_attr_t *)malloc(sizeof(pthread_attr_t))) == NULL)
-            printf("Couldnt allocate memory\n");
-            
-    pthread_t tid;
-    pid_t pid = getpid();
-    /* choose real time policy FIFO */
-    int policy = SCHED_FIFO;
     int prio;
     int ret, rc;
+    pthread_t tid;
+    pid_t pid = getpid();
     struct sched_param param;
+    pthread_attr_t tattr;
 
     /* initialized with default attributes */
-    pthread_attr_init (tattr);
+    pthread_attr_init (&tattr);
+    
+    /* choose real time policy FIFO */
+    pthread_attr_setschedpolicy(&tattr, SCHED_FIFO);
 
-    /* safe to get existing scheduling param */
-    pthread_attr_getschedparam (tattr, &param);
-
+    /* if we got a thread priority */
     if(argc == 2){
+        /* get prio from command line and convert to int */
         prio = atoi(argv[1]);
-        if((prio > (-19)) && (prio < 19)){
-            /* set the priority; others are unchanged */
+        printf("debug prio: %d\n", prio);
+        if((prio >= (-20)) && (prio <= 19)){        // accoridng to sched(7)
             param.sched_priority = prio;
-            /* setting the new scheduling param */
-            ret = pthread_attr_setschedparam (tattr, &param);
-            if(ret != 0){
-                fprintf(stderr, "Couldnt set priority!\n");
-                exit(EXIT_FAILURE);
-            }
-           printf("Priority: %d\n", param.sched_priority);
         } else {
-            printf("Ignored invalid priority.\n");
+            printf("Ignoring invalid priority.\n");
         }
+        /* setting the new scheduling param */
+        ret = pthread_attr_setschedparam(&tattr, &param);
+        if(ret != 0){
+            fprintf(stderr, "Couldnt set priority: %d\n", ret);
+            exit(EXIT_FAILURE);
+        }
+        printf("Priority: %d\n", param.sched_priority);
     }
-
-    /* setting the new scheduling policy */
-    ret = pthread_attr_setschedpolicy (tattr, policy);
-    //pthread_create(&tid, &tattr, &a3, NULL);
+    
     rc = pthread_create(&tid, NULL, a3, NULL);
-    //rc = pthread_create(&thread_id, NULL, PrintHello, (void*)t);  
     if(rc)			/* could not create thread */
     {
         printf("\n ERROR: return code from pthread_create is %d \n", rc);
         exit(1);
     }
-    pthread_join(tid, NULL);            /* wait for thread tid     */
+    /* wait for thread tid     */
+    pthread_join(tid, NULL);
     
     return 0;
 }
 
-void * a3(void *vargp){
+/* code form aufgabe 3 */
+void * a3(void *data){
 
-    const int FAK = 16; // Faktor, der n erhöht für die n^4 Berechnung (24 bei Urs)
+    const int FAK = 26; // Faktor, der n erhöht für die n^4 Berechnung (24 bei Urs)
     double res = 0.0;
     struct timeval start,end;
     unsigned long seconds, microseconds;
