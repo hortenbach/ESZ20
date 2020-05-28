@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
     ret = pthread_attr_getschedparam (&tattr, &param);
 
     if(argc == 2){
-//        prio = atoi(argv[2]);
+        prio = atoi(argv[1]);
         prio = -10;
         if((prio > (-19)) && (prio < 19)){
             /* set the priority; others are unchanged */
@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
 
 void * a3(void *vargp){
 
-    const int FAK = 21; // Faktor, der n erhöht für die n^4 Berechnung (24 bei Urs)
+    const int FAK = 31; // Faktor, der n erhöht für die n^4 Berechnung (24 bei Urs)
     double res = 0.0;
     struct timeval start,end;
     unsigned long seconds, microseconds;
