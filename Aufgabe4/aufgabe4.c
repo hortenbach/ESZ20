@@ -44,7 +44,13 @@ int main(int argc, char *argv[])
         if((prio > (-19)) && (prio < 19)){
             /* set the priority; others are unchanged */
             param.sched_priority = prio;
-            printf("Priority: %d\n", param.sched_priority);
+            /* setting the new scheduling param */
+            ret = pthread_attr_setschedparam (tattr, &param);
+            if(ret != 0){
+                fprintf(stderr, "Couldnt set priority!\n");
+                exit(EXIT_FAILURE);
+            }
+           printf("Priority: %d\n", param.sched_priority);
         } else {
             printf("Ignored invalid priority.\n");
         }
@@ -52,13 +58,6 @@ int main(int argc, char *argv[])
 
     /* setting the new scheduling policy */
     ret = pthread_attr_setschedpolicy (tattr, policy);
-    /* setting the new scheduling param */
-    ret = pthread_attr_setschedparam (tattr, &param);
-    if(ret != 0){
-        fprintf(stderr, "Couldnt set priority!\n");
-        exit(EXIT_FAILURE);
-    }
-
     //pthread_create(&tid, &tattr, &a3, NULL);
     rc = pthread_create(&tid, NULL, a3, NULL);
     //rc = pthread_create(&thread_id, NULL, PrintHello, (void*)t);  
