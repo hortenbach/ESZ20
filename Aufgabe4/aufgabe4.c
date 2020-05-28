@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
-
+#include <time.h>
 
 double n_4(int);
 void * a3(void *vargp);
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     pid_t pid = getpid();
     int policy = SCHED_FIFO;
     int prio;
-    int ret;
+    int ret, rc;
     struct sched_param param;
 
 
@@ -55,9 +55,20 @@ int main(int argc, char *argv[])
     ret = pthread_attr_setschedparam (&tattr, &param);
 
     //pthread_create(&tid, &tattr, &a3, NULL);
-    pthread_create(&tid, NULL, a3, NULL);
+    rc = pthread_create(&tid, NULL, a3, NULL);
+    //rc = pthread_create(&thread_id, NULL, PrintHello, (void*)t);  
+    if(rc)			/* could not create thread */
+    {
+        printf("\n ERROR: return code from pthread_create is %d \n", rc);
+        exit(1);
+    }
+    printf("\n Created new thread (%u) ... \n", tid);
     /*****/
 
+    const struct timespec req =  { .tv_sec = 1, .tv_nsec = 0 } ;
+    struct timespec rem;
+    nanosleep(&req,&rem);
+    
     return 0;
 }
 
@@ -68,6 +79,11 @@ void * a3(void *vargp){
     struct timeval start,end;
     unsigned long seconds, microseconds;
     char line[80]={' '};
+
+    pthread_t tid = (pthread_t)vargp;    /* data received by thread */
+    pthread_join(tid, NULL);            /* wait for thread tid     */
+
+//    pthread_detach(pthread_self());
 
     // Ausgabe Titelzeile
     sprintf(line," n%18sn_4%2sdelta_t[s]\n\r","","");
