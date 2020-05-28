@@ -21,7 +21,10 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    pthread_attr_t tattr;
+    pthread_attr_t *tattr;
+    if((tattr = (pthread_attr_t *)malloc(sizeof(pthread_attr_t))) == NULL)
+            printf("Couldnt allocate memory\n");
+            
     pthread_t tid;
     pid_t pid = getpid();
     /* choose real time policy FIFO */
@@ -31,10 +34,10 @@ int main(int argc, char *argv[])
     struct sched_param param;
 
     /* initialized with default attributes */
-    pthread_attr_init (&tattr);
+    pthread_attr_init (tattr);
 
     /* safe to get existing scheduling param */
-    pthread_attr_getschedparam (&tattr, &param);
+    pthread_attr_getschedparam (tattr, &param);
 
     if(argc == 2){
         prio = atoi(argv[1]);
@@ -47,8 +50,10 @@ int main(int argc, char *argv[])
         }
     }
 
+    /* setting the new scheduling policy */
+    ret = pthread_attr_setschedpolicy (tattr, policy);
     /* setting the new scheduling param */
-    ret = pthread_attr_setschedparam (&tattr, &param);
+    ret = pthread_attr_setschedparam (tattr, &param);
     if(ret != 0){
         fprintf(stderr, "Couldnt set priority!\n");
         exit(EXIT_FAILURE);
