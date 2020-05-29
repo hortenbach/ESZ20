@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     /* check user input */
     if (argc > 2){
         fprintf(stderr, "Too many Arguments!\nUsage: aufgabe4"
-                "[RT priority (-19 to 19)]\nUser might add no or one optional argument.\n");
+                "[RT priority /1/99)]\nUser might add no or one optional argument.\n");
         exit(EXIT_FAILURE);
     }
 
@@ -36,13 +36,20 @@ int main(int argc, char *argv[])
         /* initialized with default attributes */
         pthread_attr_init (&tattr);
         
+        pthread_attr_setinheritsched(&tattr, PTHREAD_EXPLICIT_SCHED);
+
         /* choose real time policy FIFO */
         pthread_attr_setschedpolicy(&tattr, SCHED_FIFO);
 
+        /*
+        int policy;
+        pthread_attr_getschedpolicy(&tattr,&policy);
+        printf("set: %d, get: %d\n",SCHED_RR,policy);
+        */
+
         /* get prio from command line and convert to int */
         prio = atoi(argv[1]);
-        printf("debug prio: %d\n", prio);
-        if((prio >= (-20)) && (prio <= 19)){        // accoridng to sched(7)
+        if((prio > 0) && (prio <= 99)){        // accoridng to sched(7)
             param.sched_priority = prio;
         } else {
             printf("Ignoring invalid priority.\n");
@@ -55,7 +62,7 @@ int main(int argc, char *argv[])
         }
         printf("Priority: %d\n", param.sched_priority);
         
-        rc = pthread_create(&tid, NULL, a3, NULL);
+        rc = pthread_create(&tid, &tattr, a3, NULL);
         if(rc)			/* could not create thread */
         {
             printf("\n ERROR: return code from pthread_create is %d \n", rc);
